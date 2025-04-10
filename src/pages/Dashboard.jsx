@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
-import { AuthProvider } from '../context/AuthContext';
-import { getAllUsers, createUser } from '../api/mockApi';
+import { useAuth } from '../context/AuthContext';
+import { getAllUsers, createUser, updateUser } from '../api/api';
 
 export default function Dashboard() {
-  const { user, role, token, logout } = AuthProvider();
+  const { user, role, token, logout } = useAuth();
   const [users, setUsers] = useState([]);
   const [newEmail, setNewEmail] = useState('');
   const [newPassword, setNewPassword] = useState('');
@@ -11,8 +11,10 @@ export default function Dashboard() {
 
   useEffect(() => {
     if (role === 'admin') {
-        console.log(token);
-        console.log(getAllUsers(token));
+      const users = getAllUsers(token);
+        console.log({token});
+        console.log({users});
+        console.log({getAllUsers})
       getAllUsers(token)?.then(setUsers)?.catch(console.error);
     }
   }, [role, token]);
@@ -20,6 +22,7 @@ export default function Dashboard() {
   const handleCreateUser = async (e) => {
     e.preventDefault();
     const newUser = {
+      id: users.length + 1,
       email: newEmail,
       password: newPassword,
       role: newRole

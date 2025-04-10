@@ -1,6 +1,6 @@
 // src/context/AuthContext.jsx
-import React, { createContext, useState, useEffect } from 'react';
-import { loginApi } from '../api/mockApi';
+import React, { createContext, useState, useEffect, useContext } from 'react';
+import { loginApi } from '../api/api';
 
 export const AuthContext = createContext();
 
@@ -8,6 +8,8 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(sessionStorage.getItem('token') || null);
   const [role, setRole] = useState(sessionStorage.getItem('role') || null);
+
+  const isAuthenticated = !!token;
 
   const login = async ({ email, password }) => {
     const res = await loginApi({ email, password });
@@ -33,8 +35,16 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, token, login, logout, role }}>
+    <AuthContext.Provider value={{ user, token, login, logout, role, isAuthenticated }}>
       {children}
     </AuthContext.Provider>
   );
 };
+
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if(!context){
+    throw new Error ('UseAuth debe ser usado dentro de un authProvider')
+  }
+  return context;
+}
