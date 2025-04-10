@@ -6,31 +6,53 @@ export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [token, setToken] = useState(sessionStorage.getItem('token') || null);
-  const [role, setRole] = useState(sessionStorage.getItem('role') || null);
+  const [token, setToken] = useState('');
+  const [role, setRole] = useState('');
 
   const isAuthenticated = !!token;
 
+  const decodedToken = (token) => {
+    const [id, role] = atob(token).split('-');
+    return { id, role };
+  }
+
+  useEffect(() => {
+    if (token){
+      const {role} = decodedToken(token);
+      setRole(role);
+    }
+  }, [token]);
+
   const login = async ({ email, password }) => {
+   try {
     const res = await loginApi({ email, password });
     setUser(res.user);
     setToken(res.token);
     setRole(res.user.role);
-    sessionStorage.setItem('token', res.token);
+    
+    // Guardar en sessionStorage
     sessionStorage.setItem('user', JSON.stringify(res.user));
-    sessionStorage.setItem('role', res.user.role);
+    sessionStorage.setItem('token', res.token);
+    sessionStorage.setItem('role', res.user.role); // Guardar el rol
+    
+   } catch (error) {
+    alert('Error al iniciar sesion'+ error.message);
+   }
   };
 
   const logout = () => {
-    setUser(null);
-    setToken(null);
+    setUser('');
+    setToken('');
     sessionStorage.clear();
+    localStorage.clear();
   };
 
   useEffect(() => {
     const savedUser = sessionStorage.getItem('user');
-    if (savedUser) {
+    const savedToken = sessionStorage.getItem('token');
+    if (savedUser && savedToken) {
       setUser(JSON.parse(savedUser));
+      setToken(savedToken);
     }
   }, []);
 
