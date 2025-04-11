@@ -1,54 +1,58 @@
-import React, { useState } from 'react';
-import { useAuth } from '../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
-import '../styles/Login.css'; 
-const Login = () => {
-  const { login, role } = useAuth();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-  const navigate = useNavigate();
+import { useState } from "react"
+import { useAuth } from "../context/AuthContext"
+import {
+  Card,
+  CardBody,
+  Input,
+  Button,
+  Typography,
+} from "@material-tailwind/react";
+
+
+export const Login = () => {
+  const { login } = useAuth()
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [error, setError] = useState(null)
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError(''); // Limpiar errores previos
-
+    e.preventDefault()
     try {
-      await login({ email, password }); // Llama a la función login del contexto
-      const userRole = sessionStorage.getItem('role'); // Obtener el rol del usuario
-      if (userRole === 'admin') {
-        navigate('/dashboard'); // Redirigir a dashboard si es admin
-      } else {
-        navigate('/profile'); // Redirigir a perfil si es usuario normal
-      }
+      await login(email, password)
     } catch (err) {
-      setError('Credenciales inválidas. Por favor, verifica tu correo y contraseña.');
+      setError('Invalid credentials')
     }
-  };
+  }
 
   return (
-    <div className='login-container'>
-      <h1>Iniciar Sesión</h1>
-      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-        <input
-          type="email"
-          placeholder="Correo"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-        <input
-          type="password"
-          placeholder="Contraseña"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-        {error && <p style={{ color: 'red' }}>{error}</p>}
-        <button type="submit">Iniciar sesión</button>
-      </form>
+    <div className="flex justify-center items-center min-h-screen bg-black w-full">
+      <Card className="w-96 shadow-lg">
+        <CardBody>
+          <Typography variant="h5" className="text-center mb-6">
+            Iniciar Sesión
+          </Typography>
+          <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+            <Input
+              type="text"
+              label="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+            <Input
+              type="password"
+              label="Contraseña"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+            <Button type="submit" fullWidth>
+              Ingresar
+            </Button>
+            {error && <p className="text-red-500">{error}</p>}  
+          </form>
+        </CardBody>
+      </Card>
     </div>
   );
 };
-
-export default Login;

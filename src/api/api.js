@@ -25,7 +25,7 @@ export const loginApi = async ({ email, password }) => {
     }
   
     const user = users[0];
-    const token = btoa(`${user.id}-${user.role}`); // Generar un token simulado
+    const token = btoa(`${user.id}-${user.role}`);
 
     // Guardar token en sessionStorage
     sessionStorage.setItem('token', token);

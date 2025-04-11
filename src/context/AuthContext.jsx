@@ -1,72 +1,48 @@
-// src/context/AuthContext.jsx
-import React, { createContext, useState, useEffect, useContext } from 'react';
-import { loginApi } from '../api/api';
+import { createContext, useContext, useEffect, useState } from 'react'
 
-export const AuthContext = createContext();
+const AuthContext = createContext()
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-  const [token, setToken] = useState('');
-  const [role, setRole] = useState('');
-
-  const isAuthenticated = !!token;
-
-  const decodedToken = (token) => {
-    const [id, role] = atob(token).split('-');
-    return { id, role };
-  }
+  const [user, setUser] = useState(null)
+  const [token, setToken] = useState(sessionStorage.getItem('token'))
 
   useEffect(() => {
-    if (token){
-      const {role} = decodedToken(token);
-      setRole(role);
+    if (token && !user) {
+      fetch('/api/profile', {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+        .then(res => res.json())
+        .then(data => setUser(data.user))
+        .catch(() => logout())
     }
-  }, [token]);
+  }, [token])
 
-  const login = async ({ email, password }) => {
-   try {
-    const res = await loginApi({ email, password });
-    setUser(res.user);
-    setToken(res.token);
-    setRole(res.user.role);
-    
-    // Guardar en sessionStorage
-    sessionStorage.setItem('user', JSON.stringify(res.user));
-    sessionStorage.setItem('token', res.token);
-    sessionStorage.setItem('role', res.user.role); // Guardar el rol
-    
-   } catch (error) {
-    alert('Error al iniciar sesion'+ error.message);
-   }
-  };
+  const login = async (email, password) => {
+    const res = await fetch('/api/login', {
+      method: 'POST',
+      body: JSON.stringify({ email, password }),
+      headers: { 'Content-Type': 'application/json' },
+    })
+
+    if (!res.ok) throw new Error('Login failed')
+
+    const data = await res.json()
+    sessionStorage.setItem('token', data.token)
+    setToken(data.token)
+    setUser(data.user)
+  }
 
   const logout = () => {
-    setUser('');
-    setToken('');
-    sessionStorage.clear();
-    localStorage.clear();
-  };
-
-  useEffect(() => {
-    const savedUser = sessionStorage.getItem('user');
-    const savedToken = sessionStorage.getItem('token');
-    if (savedUser && savedToken) {
-      setUser(JSON.parse(savedUser));
-      setToken(savedToken);
-    }
-  }, []);
+    sessionStorage.removeItem('token')
+    setUser(null)
+    setToken(null)
+  }
 
   return (
-    <AuthContext.Provider value={{ user, token, login, logout, role, isAuthenticated }}>
+    <AuthContext.Provider value={{ user, token, login, logout, isAuthenticated: !!user }}>
       {children}
     </AuthContext.Provider>
-  );
-};
-
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if(!context){
-    throw new Error ('UseAuth debe ser usado dentro de un authProvider')
-  }
-  return context;
+  )
 }
+
+export const useAuth = () => useContext(AuthContext)
