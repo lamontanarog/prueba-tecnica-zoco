@@ -113,12 +113,13 @@ export const handlers = [
     const token = request.headers.get("Authorization")?.replace("Bearer ", "");
     const payload = JSON.parse(atob(token));
     const userStudies = studies.filter((s) => s.userId === String(params.id));
-    console.log(userStudies);
+    console.log({userStudies});
     const userAddresses = addresses.filter(
       (a) => a.userId === String(params.id)
     );
+    console.log({userAddresses});
     const userInformation = { studies: userStudies, addresses: userAddresses };
-    console.log(userInformation);
+    console.log({userInformation});
     if (!userInformation) return new HttpResponse(null, { status: 404 });
     return HttpResponse.json(userInformation);
   }),
@@ -217,6 +218,9 @@ export const handlers = [
   }),
 
   http.put("/api/addresses/:id", async ({ params, request }) => {
+    if (!auth || !auth.startsWith("Bearer ")) {
+      return new HttpResponse("Falta token", { status: 403 });
+    }
     const token = request.headers.get("Authorization")?.replace("Bearer ", "");
     const payload = JSON.parse(atob(token));
     const body = await request.json();
@@ -226,11 +230,12 @@ export const handlers = [
       index = addresses.findIndex(
         (a) => a.id === String(params.id) && a.userId === payload.userId
       );
+      console.log(token(atob(token)))
     }else{
       index = addresses.findIndex((a) => a.id === String(params.id));
+      console.log(index);
+      console.log(token(atob(token)))
     }
-
-
     if (index === -1) return new HttpResponse(null, { status: 404 });
 
     addresses[index] = { ...addresses[index], ...body };

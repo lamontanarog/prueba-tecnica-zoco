@@ -8,6 +8,7 @@ import { PrivateRoute } from './routes/PrivateRoute'
 import { ManageUsers } from './components/admin/ManageUsers'
 import {AditionalInformation} from './components/admin/AditionalInformation'
 import { UserStudyForm } from './components/admin/UserStudyForm'
+import { UserAdressForm } from './components/admin/UserAdressForm'
 
 export const App = () => {
   const { isAuthenticated, user } = useAuth()
@@ -37,6 +38,16 @@ export const App = () => {
         <Route path={`/users/:id/studies/create`} element={
           <PrivateRoute>
             {user?.role === 'admin' ? <UserStudyForm /> : <Navigate to="/unauthorized" />}  
+          </PrivateRoute>
+        } />
+        <Route path={`/users/:id/addresses/:addressId/edit`} element={
+          <PrivateRoute>
+            {user?.role === 'admin' ? <UserAdressForm /> : <Navigate to="/unauthorized" />}  
+          </PrivateRoute>
+        } />
+        <Route path={`/users/:id/addresses/create`} element={
+          <PrivateRoute>
+            {user?.role === 'admin' ? <UserAdressForm /> : <Navigate to="/unauthorized" />}  
           </PrivateRoute>
         } />
         <Route path="/unauthorized" element={<div>Unauthorized</div>} />

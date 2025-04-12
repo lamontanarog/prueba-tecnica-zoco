@@ -43,7 +43,7 @@
   "direcciones": [
     {
       "id": "1",
-      "userId": 1,
+      "userId": "1",
       "calle": "Calle 1",
       "numero": "123",
       "ciudad": "Ciudad 1",
@@ -51,7 +51,7 @@
     },
     {
       "id": "2",
-      "userId": 2,
+      "userId": "2",
       "calle": "Calle 2",
       "numero": "456",
       "ciudad": "Ciudad 2",

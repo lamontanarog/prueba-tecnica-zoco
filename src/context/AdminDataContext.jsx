@@ -17,7 +17,8 @@ export const AdminDataProvider = ({ children }) => {
       });
       const data = await res.json();
       setStudies(data.studies);
-      setAddresses(data.addresses);
+      setAddresses(data?.addresses);
+      console.log('data de direcciones', data.addresses );
     } catch (error) {
       console.error("Error al cargar información del usuario:", error);
     }
@@ -60,24 +61,62 @@ export const AdminDataProvider = ({ children }) => {
     setStudies((prev) => prev.filter((s) => s.id !== id));
   };
 
-  // Repetí la lógica para direcciones (createAddress, updateAddress, etc.)
+  const createAddress = async (newAddress) => {
+    const res = await fetch(`/api/addresses`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(newAddress),
+    });
+    const created = await res.json();
+    setAddresses((prev) => [...prev, created]);
+  }
 
-  return (
-    <AdminDataContext.Provider
-      value={{
-        studies,
-        addresses,
-        fetchUserData,
-        updateStudy,
-        createStudy,
-        deleteStudy,
-        setAddresses,
-        setStudies,
-      }}
-    >
-      {children}
-    </AdminDataContext.Provider>
-  );
+  const updateAddress = async (updatedAddress) => {
+    setAddresses((prev) =>
+      prev.map((address) => (address.id === updatedAddress.id ? updatedAddress : address))
+    );
+    await fetch(`/api/addresses/${updatedAddress.id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(updatedAddress),
+    });
+  };
+
+  const deleteAddress = async (id) => {
+    await fetch(`/api/addresses/${id}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    setAddresses((prev) => prev.filter((a) => a.id !== id));
+  }
+
+return (
+  <AdminDataContext.Provider
+    value={{
+      studies,
+      addresses,
+      fetchUserData,
+      updateStudy,
+      createStudy,
+      deleteStudy,
+      setAddresses,
+      setStudies,
+      createAddress,
+      updateAddress,
+      deleteAddress
+    }}
+  >
+    {children}
+  </AdminDataContext.Provider>
+);
 };
 
 export const useAdminData = () => useContext(AdminDataContext);

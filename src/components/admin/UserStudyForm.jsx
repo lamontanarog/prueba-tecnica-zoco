@@ -1,6 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useAdminData } from '../../context/AdminDataContext';
+import {
+    Card,
+    CardBody,
+    CardHeader,
+    Input,
+    Typography,
+    Button,
+  } from "@material-tailwind/react";
 
 export const UserStudyForm = () => {
   const { studyId, id } = useParams();
@@ -41,47 +49,70 @@ export const UserStudyForm = () => {
   };
 
   return (
-    <div className="container">
-      <h1>Actualizar estudio</h1>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Nombre</label>
-          <input
-            type="text"
-            name="nombre"
-            value={form.nombre}
-            onChange={handleChange}
-          />
-        </div>
-        <div>
-          <label>Institución</label>
-          <input
-            type="text"
-            name="institucion"
-            value={form.institucion}
-            onChange={handleChange}
-          />
-        </div>
-        <div>
-          <label>Año de inicio</label>
-          <input
-            type="number"
-            name="inicio"
-            value={form.inicio}
-            onChange={handleChange}
-          />
-        </div>
-        <div>
-          <label>Año de finalización</label>
-          <input
-            type="number"
-            name="fin"
-            value={form.fin}
-            onChange={handleChange}
-          />
-        </div>
-        <button type="submit">Guardar cambios</button>
-      </form>
+    <div className="container mx-auto px-4 py-6">
+        <Button size='sm' className='mb-4' onClick={() => navigate(`/users/${id}`)}>volver</Button>
+      <Card className="max-w-xl mx-auto">
+        <CardHeader floated={false} shadow={false} className="bg-blue-gray-50 p-4">
+          <Typography variant="h5" color="blue-gray">
+            {studyId ? "Editar estudio" : "Crear estudio"}
+          </Typography>
+        </CardHeader>
+  
+        <CardBody>
+          <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+            <div>
+              <Input
+                label="Nombre"
+                type="text"
+                name="nombre"
+                value={form.nombre}
+                onChange={handleChange}
+                required
+              />
+            </div>
+  
+            <div>
+              <Input
+                label="Institución"
+                type="text"
+                name="institucion"
+                value={form.institucion}
+                onChange={handleChange}
+                required
+              />
+            </div>
+  
+            <div>
+              <Input
+                label="Año de inicio"
+                type="number"
+                name="inicio"
+                value={form.inicio}
+                onChange={handleChange}
+                min={1900}
+                max={2100}
+                required
+              />
+            </div>
+  
+            <div>
+              <Input
+                label="Año de finalización"
+                type="number"
+                name="fin"
+                value={form.fin}
+                onChange={handleChange}
+                min={1900}
+                max={2100}
+              />
+            </div>
+  
+            <Button type="submit" color="blue">
+              {studyId ? "Actualizar estudio" : "Crear estudio"}
+            </Button>
+          </form>
+        </CardBody>
+      </Card>
     </div>
   );
 };
