@@ -16,6 +16,7 @@ export const AdressesSection = () => {
   const { user } = useAuth();
   const [direcciones, setDirecciones] = useState([]);
   const [nuevaDireccion, setNuevaDireccion] = useState({
+    userId: user.id,
     calle: '',
     numero: '',
     ciudad: '',
@@ -103,21 +104,19 @@ export const AdressesSection = () => {
       }
     }
   }
-
-
-
   const handleEditar = (direccion) => {
     setEditando(direccion);
     setNuevaDireccion(direccion);
   };
 
-  const handleEliminar = async (id) => {
+  const deleteAddress = async (d) => {
+    const id = d.id;
     await fetch(`/api/addresses/${id}`, {
-      method: 'DELETE',
+      method: "DELETE",
       headers: authHeader(),
     });
     setDirecciones((prev) => prev.filter((d) => d.id !== id));
-  };
+  }
 
   useEffect(() => {
     fetchDirecciones();
@@ -196,7 +195,7 @@ export const AdressesSection = () => {
                   <IconButton variant="text" color="blue" onClick={() => handleEditar(d)}>
                     <PencilIcon className="h-5 w-5" />
                   </IconButton>
-                  <IconButton variant="text" color="red" onClick={() => handleEliminar(d.id)}>
+                  <IconButton variant="text" color="red" onClick={() => deleteAddress(d)}>
                     <TrashIcon className="h-5 w-5" />
                   </IconButton>
                 </div>

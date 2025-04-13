@@ -3,11 +3,11 @@ import React, { useState, useEffect } from 'react';
 import { authHeader } from '../utils/AuthHeader';
 import {
   Card,
-  CardBody,
   CardHeader,
+  CardBody,
   Input,
-  Typography,
   Button,
+  Typography,
 } from "@material-tailwind/react";
 
 export const ProfileSection = () => {
@@ -45,7 +45,7 @@ export const ProfileSection = () => {
   if (!perfil) return <p className="text-center text-gray-500">Cargando perfil...</p>;
 
   return (
-    <div className="container mx-auto px-4 py-6">
+    <section className="container mx-auto px-4 py-6">
       <Card className="max-w-xl mx-auto">
         <CardHeader floated={false} shadow={false} className="bg-blue-gray-50 p-4">
           <Typography variant="h5" color="blue-gray">
@@ -70,7 +70,7 @@ export const ProfileSection = () => {
                   setDatosEditados({ ...datosEditados, email: e.target.value })
                 }
               />
-              <div className="flex gap-2 mt-2">
+              <div className="flex justify-end gap-2 mt-4">
                 <Button color="green" onClick={handleGuardar}>
                   Guardar
                 </Button>
@@ -81,22 +81,22 @@ export const ProfileSection = () => {
             </div>
           ) : (
             <div className="space-y-2">
-              <p>
+              <Typography variant="paragraph">
                 <strong>Nombre:</strong> {perfil.name}
-              </p>
-              <p>
+              </Typography>
+              <Typography variant="paragraph">
                 <strong>Email:</strong> {perfil.email}
-              </p>
-              <p>
+              </Typography>
+              <Typography variant="paragraph">
                 <strong>Rol:</strong> {perfil.role}
-              </p>
-              <Button onClick={() => setEditando(true)} className="mt-4">
-                Editar
-              </Button>
+              </Typography>
+              <div className="flex justify-end mt-4">
+                <Button onClick={() => setEditando(true)}>Editar</Button>
+              </div>
             </div>
           )}
         </CardBody>
       </Card>
-    </div>
+    </section>
   );
 };

@@ -79,47 +79,16 @@ export const handlers = [
     users.splice(index, 1);
     return new HttpResponse(null, { status: 204 });
   }),
-
-  // PUT Adress (admin)
-  http.put("/api/addresses/:id", async ({ params, request }) => {
-    const token = request.headers.get("Authorization")?.replace("Bearer ", "");
-    const payload = JSON.parse(atob(token));
-    if (payload.role !== "admin")
-      return new HttpResponse(null, { status: 403 });
-    const body = await request.json();
-    const index = addresses.findIndex(
-      (a) => a.id === String(params.id) && a.userId === payload.userId
-    );
-    if (index === -1) return new HttpResponse(null, { status: 404 });
-    addresses[index] = { ...addresses[index], ...body };
-    return HttpResponse.json(addresses[index]);
-  }),
-
-  // DELETE Adress (admin)
-  http.delete("/api/addresses/:id", ({ params, request }) => {
-    const token = request.headers.get("Authorization")?.replace("Bearer ", "");
-    const payload = JSON.parse(atob(token));
-    if (payload.role !== "admin")
-      return new HttpResponse(null, { status: 403 });
-    const index = addresses.findIndex(
-      (a) => a.id === String(params.id) && a.userId === payload.userId
-    );
-    if (index === -1) return new HttpResponse(null, { status: 404 });
-    addresses.splice(index, 1);
-    return new HttpResponse(null, { status: 204 });
-  }),
+/////////////////////////////////////////////////////////////////////////////////////
 
   http.get("/api/users/:id", ({ params, request }) => {
     const token = request.headers.get("Authorization")?.replace("Bearer ", "");
     const payload = JSON.parse(atob(token));
     const userStudies = studies.filter((s) => s.userId === String(params.id));
-    console.log({userStudies});
     const userAddresses = addresses.filter(
       (a) => a.userId === String(params.id)
     );
-    console.log({userAddresses});
     const userInformation = { studies: userStudies, addresses: userAddresses };
-    console.log({userInformation});
     if (!userInformation) return new HttpResponse(null, { status: 404 });
     return HttpResponse.json(userInformation);
   }),
@@ -157,14 +126,14 @@ export const handlers = [
     const token = request.headers.get("Authorization")?.replace("Bearer ", "");
     const payload = JSON.parse(atob(token));
     const body = await request.json();
-    if (payload.role !== "admin"){
+    if (payload.role !== "admin") {
       const newStudy = createStudy({ ...body, userId: payload.userId });
       return HttpResponse.json(newStudy, { status: 201 });
     } else {
       const newStudy = createStudy(body);
       return HttpResponse.json(newStudy, { status: 201 });
     }
-    
+
   }),
 
   http.put("/api/studies/:id", async ({ params, request }) => {
@@ -173,14 +142,14 @@ export const handlers = [
     const body = await request.json();
     let index = 0;
 
-    if (payload.role !== "admin"){
+    if (payload.role !== "admin") {
       index = studies.findIndex(
         (s) => s.id === String(params.id) && s.userId === payload.userId
       );
     } else {
       index = studies.findIndex((s) => s.id === String(params.id));
     }
-    
+
     if (index === -1) return new HttpResponse(null, { status: 404 });
     studies[index] = { ...studies[index], ...body };
     return HttpResponse.json(studies[index]);
@@ -189,9 +158,14 @@ export const handlers = [
   http.delete("/api/studies/:id", ({ params, request }) => {
     const token = request.headers.get("Authorization")?.replace("Bearer ", "");
     const payload = JSON.parse(atob(token));
-    const index = studies.findIndex(
-      (s) => s.id === String(params.id) && s.userId === payload.userId
-    );
+    let index = 0;
+    if (payload.role !== "admin") {
+      index = addresses.findIndex(
+        (s) => s.id === String(params.id) && s.userId === payload.userId
+      );
+    } else {
+      index = addresses.findIndex((s) => s.id === String(params.id));
+    }
     if (index === -1) return new HttpResponse(null, { status: 404 });
     studies.splice(index, 1);
     return new HttpResponse(null, { status: 204 });
@@ -213,28 +187,30 @@ export const handlers = [
     const token = request.headers.get("Authorization")?.replace("Bearer ", "");
     const payload = JSON.parse(atob(token));
     const body = await request.json();
-    const newAddress = createAddress({ ...body, userId: payload.userId });
+    const newAddress = createAddress(body);
     return HttpResponse.json(newAddress, { status: 201 });
   }),
 
   http.put("/api/addresses/:id", async ({ params, request }) => {
-    if (!auth || !auth.startsWith("Bearer ")) {
-      return new HttpResponse("Falta token", { status: 403 });
-    }
     const token = request.headers.get("Authorization")?.replace("Bearer ", "");
     const payload = JSON.parse(atob(token));
     const body = await request.json();
     let index = 0;
 
+    console.log('params.id', params.id);
+    console.log('payload', payload);
+    console.log('addresses', addresses);
+    console.log('payload', payload);
     if (payload.role !== "admin") {
+      console.log('entre al if de admin')
+      console.log('addresses actuales', addresses)
+      console.log('payload.userId', payload.userId)
       index = addresses.findIndex(
         (a) => a.id === String(params.id) && a.userId === payload.userId
       );
-      console.log(token(atob(token)))
-    }else{
+    } else {
       index = addresses.findIndex((a) => a.id === String(params.id));
       console.log(index);
-      console.log(token(atob(token)))
     }
     if (index === -1) return new HttpResponse(null, { status: 404 });
 
@@ -245,9 +221,14 @@ export const handlers = [
   http.delete("/api/addresses/:id", ({ params, request }) => {
     const token = request.headers.get("Authorization")?.replace("Bearer ", "");
     const payload = JSON.parse(atob(token));
-    const index = addresses.findIndex(
-      (a) => a.id === String(params.id) && a.userId === payload.userId
-    );
+    let index = 0;
+    if (payload.role !== "admin") {
+      index = addresses.findIndex(
+        (a) => a.id === String(params.id) && a.userId === payload.userId
+      );
+    } else {
+      index = addresses.findIndex((a) => a.id === String(params.id));
+    }
     if (index === -1) return new HttpResponse(null, { status: 404 });
     addresses.splice(index, 1);
     return new HttpResponse(null, { status: 204 });

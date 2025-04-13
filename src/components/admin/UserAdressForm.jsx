@@ -22,10 +22,6 @@ export const UserAdressForm = () => {
         pais: "",
         codigoPostal: "",
     });
-
-    console.log({addressId, id})
-
-    console.log('adress en form', addresses)
     useEffect(() => {
         const foundAdress = addresses?.find((a) => a.id === addressId);
 

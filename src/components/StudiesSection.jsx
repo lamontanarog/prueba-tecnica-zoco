@@ -81,22 +81,15 @@ export const StudiesSection = () => {
     setNuevoEstudio(estudio);
   };
 
-  const handleEliminar = async (id) => {
+  const deleteStudy = async (e) => {
+    const id = e.id;
+    console.log("deleteStudy", id);
     await fetch(`/api/studies/${id}`, {
-      method: 'DELETE',
+      method: "DELETE",
       headers: authHeader(),
     });
-    setEstudios((prev) => prev.filter((e) => e.id !== id));
-    setNuevoEstudio({
-      nombre: '',
-      inicio: 0,
-      fin: 0,
-      institucion: '',
-    });
-    console.log("Estudio eliminado:", id);
-
+    setEstudios((prev) => prev.filter((s) => s.id !== id));
   };
-
 
   useEffect(() => {
     fetchEstudios();
@@ -168,7 +161,7 @@ export const StudiesSection = () => {
                   <IconButton variant="text" color="blue" onClick={() => handleEditar(e)}>
                     <PencilIcon className="h-5 w-5" />
                   </IconButton>
-                  <IconButton variant="text" color="red" onClick={() => handleEliminar(e.id)}>
+                  <IconButton variant="text" color="red" onClick={() => deleteStudy(e)}>
                     <TrashIcon className="h-5 w-5" />
                   </IconButton>
                 </div>

@@ -17,13 +17,10 @@ import {
 export const AditionalInformation = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { studies, addresses, fetchUserData } = useAdminData();
-
-  console.log({addresses})
+  const { studies, addresses, fetchUserData, deleteAddress, deleteStudy } = useAdminData();
 
   useEffect(() => {
     fetchUserData(id);
-    console.log(fetchUserData(id));
   }, [id]);
 
   const handleEditStudy = async (study) => {
@@ -37,8 +34,21 @@ export const AditionalInformation = () => {
     navigate(`/users/${id}/studies/create`);
   }
 
-  const handleCreateAdress = async () => {
+  const handleCreateAddress = async () => {
     navigate(`/users/${id}/addresses/create`);
+  }
+
+  const handleDeleteStudy = async (study) => {
+    console.log('study.id', study.id);
+    await deleteStudy(study.id);
+    fetchUserData(id);
+  }
+
+  const handleDeleteAddress = async (address) => {
+    console.log('address', address);
+    console.log('address.id', address.id);
+    await deleteAddress(address.id);
+    fetchUserData(id);
   }
 
 
@@ -53,7 +63,7 @@ export const AditionalInformation = () => {
         <CardHeader shadow={false} floated={false} className="bg-blue-gray-50 p-4">
           <div className="flex justify-between items-center">
             <Typography variant="h5">Direcciones</Typography>
-            <Button color="green" size="sm" onClick={handleCreateAdress}>Cargar nueva direccion</Button>
+            <Button color="green" size="sm" onClick={handleCreateAddress}>Cargar nueva direccion</Button>
           </div>
         </CardHeader>
         <CardBody>

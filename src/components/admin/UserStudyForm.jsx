@@ -41,10 +41,7 @@ export const UserStudyForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
     studyId ? updateStudy(form) : createStudy(form);
-    
-    console.log("Estudio actualizado:", form);
     navigate(`/users/${form.userId}`);
   };
 

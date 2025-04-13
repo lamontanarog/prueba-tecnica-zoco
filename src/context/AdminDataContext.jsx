@@ -18,7 +18,6 @@ export const AdminDataProvider = ({ children }) => {
       const data = await res.json();
       setStudies(data.studies);
       setAddresses(data?.addresses);
-      console.log('data de direcciones', data.addresses );
     } catch (error) {
       console.error("Error al cargar información del usuario:", error);
     }
@@ -78,13 +77,14 @@ export const AdminDataProvider = ({ children }) => {
     setAddresses((prev) =>
       prev.map((address) => (address.id === updatedAddress.id ? updatedAddress : address))
     );
+    console.log('id del update', updatedAddress.id);
     await fetch(`/api/addresses/${updatedAddress.id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify(updatedAddress),
+      body: JSON.stringify({...updatedAddress, userId: updatedAddress?.userId}),
     });
   };
 
