@@ -160,11 +160,11 @@ export const handlers = [
     const payload = JSON.parse(atob(token));
     let index = 0;
     if (payload.role !== "admin") {
-      index = addresses.findIndex(
-        (s) => s.id === String(params.id) && s.userId === payload.userId
+      index = studies.findIndex(
+        (s) => s.id === String(params.id)
       );
     } else {
-      index = addresses.findIndex((s) => s.id === String(params.id));
+      index = studies.findIndex((s) => s.id === String(params.id));
     }
     if (index === -1) return new HttpResponse(null, { status: 404 });
     studies.splice(index, 1);
@@ -224,7 +224,7 @@ export const handlers = [
     let index = 0;
     if (payload.role !== "admin") {
       index = addresses.findIndex(
-        (a) => a.id === String(params.id) && a.userId === payload.userId
+        (a) => a.id === String(params.id)
       );
     } else {
       index = addresses.findIndex((a) => a.id === String(params.id));
