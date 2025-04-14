@@ -76,8 +76,8 @@ Este proyecto es una SPA (Single Page Application) construida con React que incl
 ### Pasos para Ejecutar el Proyecto Localmente
 1. Clona el repositorio:
    ```bash
-   git clone https://github.com/tu-usuario/tu-repositorio.git
-   cd tu-repositorio
+   git clone https://github.com/lamontanarog/prueba-tecnica-zoco.git
+   cd prueba-tecnica-zoco
 
 2. instala las dependencias
 npm install
