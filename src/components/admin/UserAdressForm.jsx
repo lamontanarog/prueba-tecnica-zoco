@@ -8,6 +8,7 @@ import {
     Input,
     Typography,
     Button,
+    Alert
 } from "@material-tailwind/react";
 
 export const UserAdressForm = () => {
@@ -22,7 +23,12 @@ export const UserAdressForm = () => {
         pais: "",
         codigoPostal: "",
     });
-
+    const [alert, setAlert] = useState({
+        show: false,
+        message: "",
+        type: "",
+        color: "",
+    });
     useEffect(() => {
         const foundAdress = addresses?.find((a) => a.id === addressId);
 
@@ -42,85 +48,143 @@ export const UserAdressForm = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        addressId ? updateAddress(form) : createAddress(form);
+        if (addressId) {
+            if (addressId) {
+                if (addresses.some((d) => d.calle === form.calle && d.numero === form.numero && d.id !== addressId && d.userId === id)) {
+                    setAlert({
+                        show: true,
+                        message: "cuidado, ya existe una direccion con esa calle y numero",
+                        type: "warning",
+                        color: "orange",
+                    })
+                    return;
+                }
+                if (isNaN(form.numero)) {
+                    setAlert({
+                        show: true,
+                        message: "El numero de calle debe ser un numero",
+                        type: "error",
+                        color: "red",
+                    })
+                    return;
+                }
+                updateAddress(form);
+            }
+        }
+        else {
+            if (!addressId) {
+                if (isNaN(form.numero)) {
+                    setAlert({
+                        show: true,
+                        message: "El numero de calle debe ser un numero",
+                        type: "error",
+                        color: "red",
+                    })
+                    return;
+                }
+                if (addresses.some((d) => d.calle === form.calle && d.numero === form.numero && d.userId === id && d.id !== addressId)) {
+                    setAlert({
+                        show: true,
+                        message: "cuidado, ya existe una direccion con esa calle y numero",
+                        type: "warning",
+                        color: "orange",
+                    })
+                    return;
+                }
+                createAddress(form);
+            }
+        }
         navigate(`/users/${id}`);
-    };
+    }
 
     return (
-        <div className="container mx-auto px-4 py-6">
-            <Button size='sm' className='mb-4' onClick={() => navigate(`/users/${id}`)}>volver</Button>
-            <Card className="max-w-xl mx-auto">
-                <CardHeader floated={false} shadow={false} className="bg-blue-gray-50 p-4">
-                    <Typography variant="h5" color="blue-gray">
-                        {addressId ? "Editar direccion" : "Crear direccion"}
-                    </Typography>
-                </CardHeader>
+        <>
+            {alert.show && (
+                <Alert
+                    color={alert.color}
+                    open={alert.show}
+                    onClose={() => setAlert({ ...alert, show: false })}
+                >
+                    {alert.message}
+                </Alert>
+            )}
+            <div className="container mx-auto px-4 py-6">
+                <Button size='sm' className='mb-4' onClick={() => navigate(`/users/${id}`)}>volver</Button>
+                <Card className="max-w-xl mx-auto">
+                    <CardHeader floated={false} shadow={false} className="bg-blue-gray-50 p-4">
+                        <Typography variant="h5" color="blue-gray">
+                            {addressId ? "Editar direccion" : "Crear direccion"}
+                        </Typography>
+                    </CardHeader>
 
-                <CardBody>
-                    <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-                        <div>
-                            <Input
-                                label="calle"
-                                type="text"
-                                name="calle"
-                                value={form.calle}
-                                onChange={handleChange}
-                                required
-                            />
-                        </div>
+                    <CardBody>
+                        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+                            <div>
+                                <Input
+                                    label="calle"
+                                    type="text"
+                                    name="calle"
+                                    value={form.calle}
+                                    onChange={handleChange}
+                                    required
+                                />
+                            </div>
 
-                        <div>
-                            <Input
-                                label="numero"
-                                type="text"
-                                name="numero"
-                                value={form.numero}
-                                onChange={handleChange}
-                                required
-                            />
-                        </div>
+                            <div>
+                                <Input
+                                    label="numero"
+                                    type="text"
+                                    name="numero"
+                                    value={form.numero}
+                                    onChange={handleChange}
+                                    required
+                                />
+                            </div>
 
-                        <div>
-                            <Input
-                                label="ciudad"
-                                type="text"
-                                name="ciudad"
-                                value={form.ciudad}
-                                onChange={handleChange}
-                                min={1900}
-                                max={2100}
-                                required
-                            />
-                        </div>
+                            <div>
+                                <Input
+                                    label="ciudad"
+                                    type="text"
+                                    name="ciudad"
+                                    value={form.ciudad}
+                                    onChange={handleChange}
+                                    min={1900}
+                                    max={2100}
+                                    required
+                                />
+                            </div>
 
-                        <div>
-                            <Input
-                                label="pais"
-                                type="string"
-                                name="pais"
-                                value={form.pais}
-                                onChange={handleChange}
-                            />
-                        </div>
+                            <div>
+                                <Input
+                                    label="pais"
+                                    type="string"
+                                    name="pais"
+                                    value={form.pais}
+                                    onChange={handleChange}
+                                    required
+                                />
+                            </div>
 
-                        <div>
-                            <Input
-                                label="codigoPostal"
-                                type="string"
-                                name="codigoPostal"
-                                value={form.codigoPostal}
-                                onChange={handleChange}
-                                min={0o00}
-                                max={9999}
-                            />
-                        </div>
+                            <div>
+                                <Input
+                                    label="codigoPostal"
+                                    type="string"
+                                    name="codigoPostal"
+                                    value={form.codigoPostal}
+                                    onChange={handleChange}
+                                    min={0o00}
+                                    max={9999}
+                                    required
+                                />
+                            </div>
 
-                        <Button type="submit" color="blue">
-                            {addressId ? "Actualizar direccion" : "Crear direccion"}
-                        </Button>
-                    </form>
-                </CardBody>
-            </Card>
-        </div>
+                            <Button type="submit" color="blue">
+                                {addressId ? "Actualizar direccion" : "Crear direccion"}
+                            </Button>
+                        </form>
+                    </CardBody>
+                </Card>
+            </div>
+        </>
     );
 };

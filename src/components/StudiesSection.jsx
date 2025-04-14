@@ -38,22 +38,13 @@ export const StudiesSection = () => {
 
   const handleAgregar = async () => {
     try {
-      if (nuevoEstudio.nombre === '' || nuevoEstudio.inicio === 0 || nuevoEstudio.fin === 0 || nuevoEstudio.institucion === '') {
+      if (nuevoEstudio.nombre === '' || nuevoEstudio.inicio === 0 || nuevoEstudio.institucion === '') {
         setAlert({ type: 'error', message: 'Los campos no pueden estar vacios', color: 'red' });
         setEditando(null)
         return;
       }
-      if (nuevoEstudio.inicio > nuevoEstudio.fin) {
-        setAlert({ type: 'error', message: 'El año de inicio no puede ser mayor que el año de fin', color: 'red' });
-        setEditando(null)
-        return;
-      }
-      if (nuevoEstudio.inicio < 1900 || nuevoEstudio.fin > 2100) {
-        setAlert({ type: 'error', message: 'Los años deben estar entre 1900 y 2100', color: 'red' });
-        setEditando(null)
-        return;
-      }
-      if (studies.some((e) => e.nombre === nuevoEstudio.nombre && e.institucion === nuevoEstudio.institucion)) {
+      
+      if (studies.some((e) => e.nombre === nuevoEstudio.nombre && e.institucion === nuevoEstudio.institucion && e.id !== editando?.id)) {
         setAlert({ type: 'warning', message: 'Ya existe un estudio con ese nombre e institución', color: 'orange' });
         setEditando(null)
         return;
@@ -126,11 +117,13 @@ export const StudiesSection = () => {
                 label="Nombre"
                 value={nuevoEstudio.nombre}
                 onChange={(e) => setNuevoEstudio({ ...nuevoEstudio, nombre: e.target.value })}
+                required
               />
               <Input
                 label="Institución"
                 value={nuevoEstudio.institucion}
                 onChange={(e) => setNuevoEstudio({ ...nuevoEstudio, institucion: e.target.value })}
+                required
               />
               <Input
                 label="Año inicio"
@@ -139,6 +132,7 @@ export const StudiesSection = () => {
                 max={2100}
                 value={nuevoEstudio.inicio}
                 onChange={(e) => setNuevoEstudio({ ...nuevoEstudio, inicio: Number(e.target.value) })}
+                required
               />
               <Input
                 label="Año fin"

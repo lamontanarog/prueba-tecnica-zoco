@@ -44,7 +44,8 @@ export const AdressesSection = () => {
         setAlert({ type: 'error', message: 'Los campos no pueden estar vacios', color: 'red' });
         setEditando(null)
         return;
-      } else if (addresses.some((d) => d.calle === nuevaDireccion.calle && d.numero === nuevaDireccion.numero)) {
+      }
+       else if (addresses.some((d) => d.calle === nuevaDireccion.calle && d.numero === nuevaDireccion.numero && d.userId === user.id && d.id !== editando?.id)) {
         setAlert({ type: 'warning', message: 'cuidado, ya existe una dirección con esa calle y número', color: 'orange' });
         setEditando(null)
         return;
@@ -143,30 +144,35 @@ export const AdressesSection = () => {
                 name="calle"
                 value={nuevaDireccion.calle}
                 onChange={(e) => setNuevaDireccion({ ...nuevaDireccion, calle: e.target.value })}
+                required
               />
               <Input
                 label="Número"
                 name="numero"
                 value={nuevaDireccion.numero}
                 onChange={(e) => setNuevaDireccion({ ...nuevaDireccion, numero: e.target.value })}
+                required
               />
               <Input
                 label="Ciudad"
                 name="ciudad"
                 value={nuevaDireccion.ciudad}
                 onChange={(e) => setNuevaDireccion({ ...nuevaDireccion, ciudad: e.target.value })}
+                required
               />
               <Input
                 label="País"
                 name="pais"
                 value={nuevaDireccion.pais}
                 onChange={(e) => setNuevaDireccion({ ...nuevaDireccion, pais: e.target.value })}
+                required
               />
               <Input
                 label="Código Postal"
                 name="codigoPostal"
                 value={nuevaDireccion.codigoPostal}
                 onChange={(e) => setNuevaDireccion({ ...nuevaDireccion, codigoPostal: e.target.value })}
+                required
               />
             </div>
   
