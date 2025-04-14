@@ -1,4 +1,4 @@
-# Prueba Técnica - React
+# Prueba Técnica - React | Zoco
 
 ## Descripción
 
@@ -64,6 +64,7 @@ Este proyecto es una SPA (Single Page Application) construida con React que incl
 - **Material-Tailwind** para el diseño responsivo.
 - **Fetch API** para el consumo de APIs simuladas.
 - **sessionStorage** para el manejo de sesión.
+- **MSW (Mock Service Worker)** para simular la Api Rest.
 
 ---
 
@@ -79,22 +80,32 @@ Este proyecto es una SPA (Single Page Application) construida con React que incl
    git clone https://github.com/lamontanarog/prueba-tecnica-zoco.git
    cd prueba-tecnica-zoco
 
+
 2. instala las dependencias
+```
 npm install
+```
 
 3. Iniciar el servidor de desarrollo.
+```
 npm start
+```
 
 4. abrir la aplicacion en el navegador.
-http://localhost:3000
 
+```
+http://localhost:3000
+```
 ### Despliegue
 El proyecto está desplegado en Vercel. Puedes acceder a la aplicación en el siguiente enlace:
 
 Demo en Vivo
-
+```
+https://prueba-tecnica-zoco.vercel.app/
+```
 ### Estructura del proyecto
 
+```bash
 src/
 ├── components/
 │   ├── admin/
@@ -121,27 +132,30 @@ src/
 │    └── Layout.jsx
 ├── App.jsx
 └── main.jsx
-
+```
 ### Instrucciones para evaluadores
 
 1. Login:
 
-*Usa las siguientes credenciales para probar la autenticación:
+* Usa las siguientes credenciales para probar la autenticación:
 
+```
 Admin:
 ---- Email: admin@demo.com
 ---- Password: admin123
 
+```
+```
 Usuario:
----- Email: user@example.com
+---- Email: user@demo.com
 ---- Password: user123
-
+```
 2. DashBoard:
 
-*Probar las funcionalidades de creación, edición y eliminación de usuarios (como Admin).
-*Probar la gestión de estudios y direcciones (como Usuario Normal).
+* Probar las funcionalidades de creación, edición y eliminación de usuarios y su informacion adicional (como Admin).
+
+* Probar la gestión de estudios y direcciones (como Usuario Normal).
 
 3. Diseño responsivo:
 
 * Cambia el tamaño de la ventana del navegador para verificar la adaptabilidad del diseño.
-
