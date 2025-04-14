@@ -1,4 +1,3 @@
-// pages/UserDashboard.jsx
 import React from 'react'
 import { StudiesSection } from '../components/StudiesSection'
 import { AdressesSection } from '../components/AdressesSection'
