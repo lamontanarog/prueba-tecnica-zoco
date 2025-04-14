@@ -37,6 +37,10 @@ export const ProfileSection = () => {
     });
     const actualizado = await res.json();
     try {
+      if (datosEditados.name === '' || datosEditados.email === '') {
+        setAlert({ type: 'error', message: 'Por favor, completa todos los campos', color: 'red' });
+        return;
+      }
       setPerfil(actualizado);
       setEditando(false);
       setAlert({ type: 'success', message: 'Perfil actualizado correctamente', color: 'green' });
@@ -89,6 +93,7 @@ export const ProfileSection = () => {
                   onChange={(e) =>
                     setDatosEditados({ ...datosEditados, name: e.target.value })
                   }
+                  required
                 />
                 <Input
                   label="Email"
@@ -96,6 +101,7 @@ export const ProfileSection = () => {
                   onChange={(e) =>
                     setDatosEditados({ ...datosEditados, email: e.target.value })
                   }
+                  required
                 />
                 <div className="flex flex-col sm:flex-row justify-end gap-2 mt-4">
                   <Button color="green" onClick={handleGuardar}>
