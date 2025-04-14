@@ -94,7 +94,7 @@ npm start
 4. abrir la aplicacion en el navegador.
 
 ```
-http://localhost:3000
+http://localhost:5173/
 ```
 ### Despliegue
 El proyecto está desplegado en Vercel. Puedes acceder a la aplicación en el siguiente enlace:
