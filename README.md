@@ -110,6 +110,8 @@ src/
 ├── components/
 │   ├── admin/
 │   │   ├── ManageUsers.jsx
+|   |   ├── UserAdressForm.jsx
+|   |   ├── UserStudyForm.jsx
 │   │   └── AditionalInformation.jsx
 │   ├── StudiesSection.jsx
 │   ├── AdressesSection.jsx
