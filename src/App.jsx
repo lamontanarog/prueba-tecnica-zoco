@@ -9,11 +9,14 @@ import { ManageUsers } from './components/admin/ManageUsers'
 import {AditionalInformation} from './components/admin/AditionalInformation'
 import { UserStudyForm } from './components/admin/UserStudyForm'
 import { UserAdressForm } from './components/admin/UserAdressForm'
+import Layout from './pages/Layout'
 
 export const App = () => {
   const { isAuthenticated, user } = useAuth()
 
   return (
+    <>
+    <Layout />
     <Router>
       <Routes>
         <Route path="/" element={isAuthenticated ? <Navigate to="/dashboard" /> : <Login />} />
@@ -54,5 +57,6 @@ export const App = () => {
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </Router>
+    </>
   )
 }

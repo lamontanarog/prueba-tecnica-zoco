@@ -1,5 +1,3 @@
-// src/mocks/handlers.js
-
 import { http, HttpResponse } from "msw";
 import {
   users,
@@ -11,7 +9,8 @@ import {
 } from "./data";
 
 export const handlers = [
-  // LOGIN
+
+  /////////////////////////////LOGIN//////////////////////////////////////////////
   http.post("/api/login", async ({ request }) => {
     const body = await request.json();
     const user = users.find(
@@ -34,7 +33,9 @@ export const handlers = [
       },
     });
   }),
-
+  ///////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////ADMIN//////////////////////////////////////////////
+  ///////////////////////////////////////////////////////////////////////////////
   // GET USERS (admin)
   http.get("/api/users", ({ request }) => {
     const token = request.headers.get("Authorization")?.replace("Bearer ", "");
@@ -79,7 +80,9 @@ export const handlers = [
     users.splice(index, 1);
     return new HttpResponse(null, { status: 204 });
   }),
-/////////////////////////////////////////////////////////////////////////////////////
+  ///////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////USER///////////////////////////////////////////////
+  ///////////////////////////////////////////////////////////////////////////////
 
   http.get("/api/users/:id", ({ params, request }) => {
     const token = request.headers.get("Authorization")?.replace("Bearer ", "");
@@ -110,8 +113,10 @@ export const handlers = [
     users[index] = { ...users[index], ...body };
     return HttpResponse.json(users[index]);
   }),
-
-  // GET STUDIES (usuario autenticado)
+  ///////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////STUDIES////////////////////////////////////////////
+  ///////////////////////////////////////////////////////////////////////////////
+  // GET STUDIES
   http.get("/api/studies", ({ request }) => {
     const token = request.headers.get("Authorization")?.replace("Bearer ", "");
     const payload = JSON.parse(atob(token));
@@ -135,7 +140,7 @@ export const handlers = [
     }
 
   }),
-
+  // PUT STUDY
   http.put("/api/studies/:id", async ({ params, request }) => {
     const token = request.headers.get("Authorization")?.replace("Bearer ", "");
     const payload = JSON.parse(atob(token));
@@ -154,7 +159,7 @@ export const handlers = [
     studies[index] = { ...studies[index], ...body };
     return HttpResponse.json(studies[index]);
   }),
-
+  // DELETE STUDY
   http.delete("/api/studies/:id", ({ params, request }) => {
     const token = request.headers.get("Authorization")?.replace("Bearer ", "");
     const payload = JSON.parse(atob(token));
@@ -171,6 +176,9 @@ export const handlers = [
     return new HttpResponse(null, { status: 204 });
   }),
 
+  ////////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////ADDRESSES///////////////////////////////////////////
+  ///////////////////////////////////////////////////////////////////////////////
   // GET ADDRESSES
   http.get("/api/addresses", ({ request }) => {
     const token = request.headers.get("Authorization")?.replace("Bearer ", "");
@@ -190,34 +198,25 @@ export const handlers = [
     const newAddress = createAddress(body);
     return HttpResponse.json(newAddress, { status: 201 });
   }),
-
+  // PUT ADDRESS
   http.put("/api/addresses/:id", async ({ params, request }) => {
     const token = request.headers.get("Authorization")?.replace("Bearer ", "");
     const payload = JSON.parse(atob(token));
     const body = await request.json();
     let index = 0;
-
-    console.log('params.id', params.id);
-    console.log('payload', payload);
-    console.log('addresses', addresses);
-    console.log('payload', payload);
     if (payload.role !== "admin") {
-      console.log('entre al if de admin')
-      console.log('addresses actuales', addresses)
-      console.log('payload.userId', payload.userId)
       index = addresses.findIndex(
         (a) => a.id === String(params.id) && a.userId === payload.userId
       );
     } else {
       index = addresses.findIndex((a) => a.id === String(params.id));
-      console.log(index);
     }
     if (index === -1) return new HttpResponse(null, { status: 404 });
 
     addresses[index] = { ...addresses[index], ...body };
     return HttpResponse.json(addresses[index]);
   }),
-
+  //  DELETE ADDRESS
   http.delete("/api/addresses/:id", ({ params, request }) => {
     const token = request.headers.get("Authorization")?.replace("Bearer ", "");
     const payload = JSON.parse(atob(token));

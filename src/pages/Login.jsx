@@ -8,7 +8,6 @@ import {
   Typography,
 } from "@material-tailwind/react";
 
-
 export const Login = () => {
   const { login } = useAuth()
   const [email, setEmail] = useState('')
@@ -22,7 +21,7 @@ export const Login = () => {
     } catch (err) {
       setError('Invalid credentials')
     }
-  }
+  };
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-black w-full">
@@ -49,7 +48,7 @@ export const Login = () => {
             <Button type="submit" fullWidth>
               Ingresar
             </Button>
-            {error && <p className="text-red-500">{error}</p>}  
+            {error && <p className="text-red-500">{error}</p>}
           </form>
         </CardBody>
       </Card>

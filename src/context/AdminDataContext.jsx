@@ -1,5 +1,5 @@
 import { createContext, useContext, useState } from "react";
-import { useAuth } from "./AuthContext"; // ajustá el path si hace falta
+import { useAuth } from "./AuthContext";
 
 const AdminDataContext = createContext();
 
@@ -77,14 +77,13 @@ export const AdminDataProvider = ({ children }) => {
     setAddresses((prev) =>
       prev.map((address) => (address.id === updatedAddress.id ? updatedAddress : address))
     );
-    console.log('id del update', updatedAddress.id);
     await fetch(`/api/addresses/${updatedAddress.id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({...updatedAddress, userId: updatedAddress?.userId}),
+      body: JSON.stringify({ ...updatedAddress, userId: updatedAddress?.userId }),
     });
   };
 
@@ -98,25 +97,25 @@ export const AdminDataProvider = ({ children }) => {
     setAddresses((prev) => prev.filter((a) => a.id !== id));
   }
 
-return (
-  <AdminDataContext.Provider
-    value={{
-      studies,
-      addresses,
-      fetchUserData,
-      updateStudy,
-      createStudy,
-      deleteStudy,
-      setAddresses,
-      setStudies,
-      createAddress,
-      updateAddress,
-      deleteAddress
-    }}
-  >
-    {children}
-  </AdminDataContext.Provider>
-);
+  return (
+    <AdminDataContext.Provider
+      value={{
+        studies,
+        addresses,
+        fetchUserData,
+        updateStudy,
+        createStudy,
+        deleteStudy,
+        setAddresses,
+        setStudies,
+        createAddress,
+        updateAddress,
+        deleteAddress
+      }}
+    >
+      {children}
+    </AdminDataContext.Provider>
+  );
 };
 
 export const useAdminData = () => useContext(AdminDataContext);

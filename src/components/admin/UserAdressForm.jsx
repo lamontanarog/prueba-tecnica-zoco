@@ -22,13 +22,13 @@ export const UserAdressForm = () => {
         pais: "",
         codigoPostal: "",
     });
+
     useEffect(() => {
         const foundAdress = addresses?.find((a) => a.id === addressId);
 
         if (foundAdress) {
             setForm(foundAdress);
         }
-        console.log("Direccion encontrada:", foundAdress);
     }, [addressId, addresses]);
 
     const handleChange = (e) => {
@@ -43,11 +43,8 @@ export const UserAdressForm = () => {
         e.preventDefault();
 
         addressId ? updateAddress(form) : createAddress(form);
-
-        console.log("Dirreccion actualizado:", form);
         navigate(`/users/${id}`);
     };
-
 
     return (
         <div className="container mx-auto px-4 py-6">

@@ -8,6 +8,7 @@ import {
   CardBody,
   Typography,
   IconButton,
+  Alert
 } from "@material-tailwind/react";
 import { PencilIcon, TrashIcon, EyeIcon } from "@heroicons/react/24/outline";
 import { authHeader } from '../../utils/AuthHeader';
@@ -24,6 +25,7 @@ export const ManageUsers = () => {
   const [editData, setEditData] = useState(null);
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const [alert, setAlert] = useState({ type: '', message: '' });
 
   const fetchUsuarios = async () => {
     const res = await fetch('/api/users', {
@@ -52,14 +54,32 @@ export const ManageUsers = () => {
       },
       body: JSON.stringify(nuevoUsuario),
     });
-
-    if (!res.ok) {
-      setError('Error al crear usuario');
+    try {
+      if (!res.ok) {
+        setAlert({ type: 'error', message: 'Error al crear usuario', color: 'red' });
+        setEditData(null);
+        return;
+      }
+      if (nuevoUsuario.name === '' || nuevoUsuario.email === '' || nuevoUsuario.password === '') {
+        setAlert({ type: 'error', message: 'Los campos no pueden estar vacios', color: 'red' });
+        setEditData(null);
+        return;
+      }
+      if (usuarios.some((u) => u.email === nuevoUsuario.email)) {
+        setAlert({ type: 'error', message: 'El email ya esta en uso', color: 'red' });
+        setEditData(null);
+        return;
+      }
+    } catch (error) {
+      console.error(error);
+      setAlert({ type: 'error', message: 'Error al crear usuario', color: 'red' });
+      setEditData(null);
       return;
     }
 
     const creado = await res.json();
     setUsuarios((prev) => [...prev, creado]);
+    setAlert({ type: 'success', message: 'Usuario creado correctamente', color: 'green' });
     setNuevoUsuario({ name: '', email: '', password: '', role: 'user' });
   };
 
@@ -82,12 +102,34 @@ export const ManageUsers = () => {
       },
       body: JSON.stringify(editData),
     });
+    try {
+      if (!res.ok) {
+        setAlert({ type: 'error', message: 'Error al editar usuario', color: 'red' });
+        setEditData(null);
+        return;
+      }
+      if (editData.name === '' || editData.email === '' || editData.password === '') {
+        setAlert({ type: 'error', message: 'Los campos no pueden estar vacios', color: 'red' });
+        setEditData(null);
+        return;
+      }
+      if (usuarios.some((u) => u.email === editData.email && u.id !== editData.id)) {
+       setAlert({ type: 'error', message: 'El email ya esta en uso', color: 'red' });
+        setEditData(null);
+        return;
+      }
 
-    if (!res.ok) {
-      setError('Error al editar usuario');
+    } catch (error) {
+      console.error(error);
+     setAlert({ type: 'error', message: 'Error al editar usuario', color: 'red' });
+      setEditData(null);
       return;
     }
-
+    if (res.ok) {
+      const editado = await res.json();
+      setUsuarios((prev) => prev.map((u) => (u.id === editado.id ? editado : u)));
+      setAlert({ type: 'success', message: 'Usuario editado correctamente', color: 'green' });
+    }
     setEditData(null);
     setError('');
     fetchUsuarios();
@@ -112,6 +154,12 @@ export const ManageUsers = () => {
   };
 
   return (
+    <>
+    {alert.message && (
+      <Alert className="fixed top-5 right-5 z-50 w-1/3" color={alert.color} onClose={() => setAlert({ type: '', message: '' })}>
+        {alert.message}
+      </Alert>
+    )}
     <section className="p-6 max-w-6xl mx-auto">
       <Typography variant="h4" color="blue-gray" className="mb-4">
         Panel de Administración de Usuarios
@@ -234,5 +282,6 @@ export const ManageUsers = () => {
         </table>
       </div>
     </section>
+    </>
   );
 };
